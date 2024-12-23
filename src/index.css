@@ -1,0 +1,44 @@
+:root {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: #c3c3c3;
+  background-color: #242424;
+}
+
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-height: 100vh;
+}
+
+h1 {
+  font-family: 'Tangerine', serif;
+  font-size: 5em;
+  margin-bottom: 0;
+  color: #04ac74;
+}
+
+h4 {
+  margin-top: 0;
+  color: #c3c3c3;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color: #c3c3c3;
+  background-color: #1a1a1a;
+  cursor: pointer;
+}
+
+
+button:hover {
+  border-color: #e5e5e5;
+}
+
+
