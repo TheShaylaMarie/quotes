@@ -24,6 +24,11 @@ h4 {
   color: #c3c3c3;
 }
 
+.quote-text {
+  font-size: xx-large;
+  -webkit-text-stroke-width: 1px;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
