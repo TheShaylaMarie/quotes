@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import "../Home/home.css"
 import axios from 'axios';
+import Images from './Images';
 
 
 
@@ -14,7 +15,7 @@ const [colorData, setColorData] = useState({color: "black", WebkitTextStrokeColo
 
 const [favorite, setFavorite] = useState([]);
 const [quote, setQuote] = useState(localStorage.getItem("quote"));
-const [favoritesObj, setFavoriteObj] = useState(localStorage.getItem("favorite_obj"))
+const [favoritesObj, setFavoritesObj] = useState(localStorage.getItem("favorite_obj"))
 
 const api_url_font = "https://www.googleapis.com/webfonts/v1/webfonts?key="
 const api_key_font = import.meta.env.VITE_API_KEY_FONTS;
@@ -57,7 +58,7 @@ useEffect(() =>{
 
 
 function saveFavoriteObj() {
-    setFavoriteObj(favoritesObj.push(
+    setFavoritesObj(favoritesObj.push(
         {
         quote: quote,
         color: "red",
@@ -76,12 +77,14 @@ function getQuote() {
         }
     })
     .then(response => {
-        console.log(response.data);      
-        setQuoteData(response.data);
+        if(response.data.length > 0) {
+            setQuoteData(response.data);
+            setQuote(response.data[0].quote);
+        }
     })
     .catch((err) => {
-        console.log("Error retrieving quote data.");
-        console.log(err);
+        console.log("Error retrieving quote data.", err);
+        
     })
 
 }
@@ -95,17 +98,27 @@ function getQuote() {
     <div className='card-container'>
         
         <blockquote className='quote-container'>
-            <p className='quote-text' style={colorData} >"Quote"
-                
-            </p>
+            <div className='quote-text' style={colorData} >
+                {quoteData.map((quoteObj, index) => (
+                    <div key={index}>
+                        <p>"{quoteObj.quote}"</p>
+                        <small> {quoteObj.author} </small>
+                    </div>
+                ))}
+            </div>
         </blockquote> 
 
 
 
         <div className='button-container' >
-        <button>Random</button>
+        <button onClick={() => getQuote()}>Random</button>
+
         <button>New Image</button>
-        <button>New Quote</button>
+
+        <button onClick={() => getQuote()}>New Quote</button>
+
+        <button>Favorite</button>
+
         <input type="color" 
                 id="quote-text-color"
                 className="color-picker"
