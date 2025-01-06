@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import "../Home/home.css"
 import axios from 'axios';
 import Images from './Images';
+import imagesList from './Images';
 
 
 
@@ -98,6 +99,15 @@ function getQuote() {
     <div className='card-container'>
         
         <blockquote className='quote-container'>
+            <div className='img-container'>
+                {imagesList.map((image, index) =>
+                <img
+                key={index}
+                src={image.src}
+                alt={image.alt}
+                style={{ width: "100%", maxWidth: "300px", margin: "10px" }}
+                />)}
+            </div>
             <div className='quote-text' style={colorData} >
                 {quoteData.map((quoteObj, index) => (
                     <div key={index}>
@@ -108,6 +118,7 @@ function getQuote() {
             </div>
         </blockquote> 
 
+       
 
 
         <div className='button-container' >

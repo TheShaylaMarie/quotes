@@ -31,6 +31,9 @@ blockquote {
   font-size: 18pt;
   -webkit-text-stroke-width: .5px;
 }
+.img-container {
+  display: block;
+}
 
 button {
   border-radius: 8px;
