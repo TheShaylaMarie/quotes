@@ -151,8 +151,10 @@ function getImage() {
 
     return (
         <>
+            <div className='title-container'>
             <h1>Inspire</h1>
-            <h4>Quote Generator</h4>
+            <h3>Quote Generator</h3>
+            </div>
             <div className='card-container'>
 
                 <blockquote className='quote-container'>
@@ -161,7 +163,7 @@ function getImage() {
                             key={image}
                             src={imagesList[image].src}
                             alt={imagesList[image].alt}
-                            style={{ width: "100%", maxWidth: "auto" }}
+                            style={{ width: "100%", maxWidth: "auto", opacity: 0.6 }}
                         />
 
                     </div>
@@ -193,18 +195,27 @@ function getImage() {
 
                     <button onClick={() => randomizeFont(fontData)}>New Font</button>
 
-                    <button>Favorite</button>
+                    {/* <button>Favorite</button> */}
 
+                    </div>
+
+                    <div className='color-picker-container'>
+
+                    <label htmlFor="quote-text-color" className='color-picker-label'>Text Color
                     <input type="color"
                         id="quote-text-color"
                         className="color-picker"
                         onChange={(e) => captureColorData(e.target.value, "text-color")}
                     />
+                    </label>
+
+                    <label htmlFor="stroke-text-color" className='color-picker-label'>Stroke Color
                     <input type="color"
                         id="quote-stroke-color"
                         className="color-picker"
                         onChange={(e) => captureColorData(e.target.value, "stroke-color")}
                     />
+                    </label>
 
                 </div>
             </div>
