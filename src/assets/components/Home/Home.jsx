@@ -23,7 +23,7 @@ export default function home() {
     
     const [favoritesObj, setFavoritesObj] = useState(localStorage.getItem("favorite_obj"))
 
-    const api_url_font = "https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyA7NxR8gN0q3-BLzasjsyjCLcVNqJvrqis"
+    const api_url_font = "https://www.googleapis.com/webfonts/v1/webfonts?key="
     const api_key_font = import.meta.env.VITE_API_KEY_FONTS;
 
 
@@ -72,33 +72,53 @@ export default function home() {
         setFavoritesObj(favoritesObj.push(
             {
                 quote: quote,
-                color: "red",
+                color: "blue",
                 author: "Someone"
             }
         ))
     }
 
+
+
+    
 // GET FONTS FROM API
     function fetchFonts() {
-        axios.get(api_url_font)
+        axios.get(api_url_font + api_key_font)
         .then(response => {
             const fonts = response.data.items;
             if (fonts && fonts.length > 0 ) {
-                const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
+                
                 setFontData(fonts);
-                setFont(randomFont.family);
+                randomizeFont(fonts);
+
             }
-            console.log("response:", response)
+            // console.log("all font data", fonts)
         })
         .catch((err) => {
             console.log("Error recieving font data", err)
         })
+    
     }
 
-
-    function getRandomFont() {
-
+// RANDOMLY CHOOSE FONT
+function randomizeFont(fonts) {
+    if(fonts && fonts.length > 0) {
+        const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
+        const fontFile = new FontFace( randomFont.family,  `url(${randomFont.files.regular})` );
+        
+        
+        fontFile.load().then(() => {
+            document.fonts.add(fontFile);
+            document.body.classList.add("fonts-loaded");
+            setFont(randomFont.family);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     }
+
+}
+  
 
 
 // GET RANDOM QUOTE
@@ -122,6 +142,8 @@ export default function home() {
 
     }
 
+
+
 // GET RANDOM IMAGE
 function getImage() {
     setImage(Math.floor(Math.random() * imagesList.length));
@@ -144,10 +166,13 @@ function getImage() {
 
                     </div>
                     <div className='quote-text' style={{...colorData,
-                    fontFamily: font || 'inherit'
-
+                    fontFamily: font ?  `'${font}', sans-serif` : 'inherit',
+                                
                     }}>
+
+
                         {quoteData.map((quoteObj, index) => (
+
                             <div key={index}>
                                 <p>"{quoteObj.quote}"</p>
                                 <small> {quoteObj.author} </small>
@@ -160,13 +185,13 @@ function getImage() {
 
 
                 <div className='button-container' >
-                    <button onClick={() => getQuote()}>Random</button>
+                    <button onClick={() =>{ getQuote(); randomizeFont() }}>Random</button>
 
                     <button onClick={() => getImage()}>New Image</button>
 
                     <button onClick={() => getQuote()}>New Quote</button>
 
-                    <button onClick={() => getFont()}>New Font</button>
+                    <button onClick={() => randomizeFont(fontData)}>New Font</button>
 
                     <button>Favorite</button>
 
