@@ -14,13 +14,13 @@ export default function home() {
     const [fontData, setFontData] = useState([]);
     const [font, setFont] = useState([]);
 
-    const [colorData, setColorData] = useState({ color: "black", WebkitTextStrokeColor: "white" });
+    const [colorData, setColorData] = useState({ color: "#e5e5e5", WebkitTextStrokeColor: "#e5e5e5" });
 
     const [image, setImage] = useState(Math.floor(Math.random() * imagesList.length));
 
     const [favorite, setFavorite] = useState([]);
 
-    
+
     const [favoritesObj, setFavoritesObj] = useState(localStorage.getItem("favorite_obj"))
 
     const api_url_font = "https://www.googleapis.com/webfonts/v1/webfonts?key="
@@ -36,23 +36,25 @@ export default function home() {
     }, []);
 
     useEffect(() => {
+        getQuote();
+    }, []);
+
+    useEffect(() => {
         localStorage.setItem("favorites", favorite)
     }, [favorite])
 
-    useEffect(() => {
-        localStorage.setItem("quote", quote)
-    }, [quote])
+    // useEffect(() => {
+    //     localStorage.setItem("quote", quote)
+    // }, [quote])
 
     useEffect(() => {
         localStorage.setItem("favorite_obj", favoritesObj)
     }, [favoritesObj])
 
 
-// CAPTURE USER SELECTED COLORS FOR FONT AND STROKE
+    // CAPTURE USER SELECTED COLORS FOR FONT AND STROKE
     function captureColorData(colorValue, colorPicker) {
-        //    console.log(colorValue, colorPicker);
 
-        const favorite_object = {}
 
         if (colorPicker === "text-color") {
             setColorData({ ...colorData, color: colorValue })
@@ -67,8 +69,10 @@ export default function home() {
 
 
 
-// SAVE FAVORITES
+    // SAVE FAVORITES
     function saveFavoriteObj() {
+
+        const favorite_object = {}
         setFavoritesObj(favoritesObj.push(
             {
                 quote: quote,
@@ -80,48 +84,47 @@ export default function home() {
 
 
 
-    
-// GET FONTS FROM API
+
+    // GET FONTS FROM API
     function fetchFonts() {
         axios.get(api_url_font + api_key_font)
-        .then(response => {
-            const fonts = response.data.items;
-            if (fonts && fonts.length > 0 ) {
-                
-                setFontData(fonts);
-                randomizeFont(fonts);
+            .then(response => {
+                const fonts = response.data.items;
+                if (fonts && fonts.length > 0) {
 
-            }
-            // console.log("all font data", fonts)
-        })
-        .catch((err) => {
-            console.log("Error recieving font data", err)
-        })
-    
+                    setFontData(fonts);
+                    randomizeFont(fonts);
+
+                }
+            })
+            .catch((err) => {
+                console.log("Error recieving font data", err)
+            })
+
     }
 
-// RANDOMLY CHOOSE FONT
-function randomizeFont(fonts) {
-    if(fonts && fonts.length > 0) {
-        const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
-        const fontFile = new FontFace( randomFont.family,  `url(${randomFont.files.regular})` );
-        
-        
-        fontFile.load().then(() => {
-            document.fonts.add(fontFile);
-            document.body.classList.add("fonts-loaded");
-            setFont(randomFont.family);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+    // RANDOMLY CHOOSE FONT
+    function randomizeFont(fonts) {
+        if (fonts && fonts.length > 0) {
+            const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
+            const fontFile = new FontFace(randomFont.family, `url(${randomFont.files.regular})`);
+
+
+            fontFile.load().then(() => {
+                document.fonts.add(fontFile);
+                document.body.classList.add("fonts-loaded");
+                setFont(randomFont.family);
+            })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+
     }
 
-}
-  
 
 
-// GET RANDOM QUOTE
+    // GET RANDOM QUOTE
     function getQuote() {
 
         axios.get(api_url_quotes, {
@@ -144,16 +147,19 @@ function randomizeFont(fonts) {
 
 
 
-// GET RANDOM IMAGE
-function getImage() {
-    setImage(Math.floor(Math.random() * imagesList.length));
-}
+    // GET RANDOM IMAGE
+    function getImage() {
+        setImage(Math.floor(Math.random() * imagesList.length));
+    }
+
+
+
 
     return (
         <>
             <div className='title-container'>
-            <h1>Inspire</h1>
-            <h3>Quote Generator</h3>
+                <h1>Inspire</h1>
+                <h3>Quote Generator</h3>
             </div>
             <div className='card-container'>
 
@@ -167,9 +173,10 @@ function getImage() {
                         />
 
                     </div>
-                    <div className='quote-text' style={{...colorData,
-                    fontFamily: font ?  `'${font}', sans-serif` : 'inherit',
-                                
+                    <div className='quote-text' style={{
+                        ...colorData,
+                        fontFamily: font ? `'${font}', sans-serif` : 'inherit',
+
                     }}>
 
 
@@ -187,7 +194,7 @@ function getImage() {
 
 
                 <div className='button-container' >
-                    <button onClick={() =>{ getQuote(); randomizeFont() }}>Random</button>
+                    <button onClick={() => { getQuote(); randomizeFont() }}>Random</button>
 
                     <button onClick={() => getImage()}>New Image</button>
 
@@ -197,24 +204,26 @@ function getImage() {
 
                     {/* <button>Favorite</button> */}
 
-                    </div>
+                </div>
 
-                    <div className='color-picker-container'>
+                <div className='color-picker-container'>
 
                     <label htmlFor="quote-text-color" className='color-picker-label'>Text Color
-                    <input type="color"
-                        id="quote-text-color"
-                        className="color-picker"
-                        onChange={(e) => captureColorData(e.target.value, "text-color")}
-                    />
+                        <input type="color"
+                            value={colorData.color}
+                            id="quote-text-color"
+                            className="color-picker"
+                            onChange={(e) => captureColorData(e.target.value, "text-color")}
+                        />
                     </label>
 
-                    <label htmlFor="stroke-text-color" className='color-picker-label'>Stroke Color
-                    <input type="color"
-                        id="quote-stroke-color"
-                        className="color-picker"
-                        onChange={(e) => captureColorData(e.target.value, "stroke-color")}
-                    />
+                    <label htmlFor="quote-stroke-color" className='color-picker-label'>Stroke Color
+                        <input type="color"
+                            value={colorData.WebkitTextStrokeColor}
+                            id="quote-stroke-color"
+                            className="color-picker"
+                            onChange={(e) => captureColorData(e.target.value, "stroke-color")}
+                        />
                     </label>
 
                 </div>
